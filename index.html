@@ -15,17 +15,33 @@
     <div id="map"></div>
     <script>
         mapboxgl.accessToken = 'pk.eyJ1IjoiZnJlZWZyZWU2MCIsImEiOiJjbHdyZ2hlamwwMGczMmlzYXJiem9oaHFxIn0.bp_4Do2mZmVjZwkDxlWmfw';
-        var map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v11', // style URL
-            center: [31.265094007657396, 27.272041001355618], // starting position [lng, lat]
-            zoom: 12 // starting zoom
-        });
 
-        new mapboxgl.Marker()
-            .setLngLat([31.265094007657396, 27.272041001355618])
-            .setPopup(new mapboxgl.Popup().setHTML("<h1>Here!</h1>"))
-            .addTo(map);
+        function getQueryParams() {
+            const params = {};
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            params.lat = parseFloat(urlParams.get('lat'));
+            params.lng = parseFloat(urlParams.get('lng'));
+            return params;
+        }
+
+        const params = getQueryParams();
+
+        if (!isNaN(params.lat) && !isNaN(params.lng)) {
+            var map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v11',
+                center: [params.lng, params.lat], // starting position [lng, lat]
+                zoom: 12 // starting zoom
+            });
+
+            new mapboxgl.Marker()
+                .setLngLat([params.lng, params.lat])
+                .setPopup(new mapboxgl.Popup().setHTML("<h1>Here!</h1>"))
+                .addTo(map);
+        } else {
+            alert("Invalid latitude or longitude");
+        }
     </script>
 </body>
 </html>
