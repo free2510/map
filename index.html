@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Mapbox Example</title>
+    <title>Satellite Map API</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css" rel="stylesheet" />
@@ -16,29 +16,30 @@
     <script>
         mapboxgl.accessToken = 'pk.eyJ1IjoiZnJlZWZyZWU2MCIsImEiOiJjbHdyZ2hlamwwMGczMmlzYXJiem9oaHFxIn0.bp_4Do2mZmVjZwkDxlWmfw';
 
-        function getQueryParams() {
-            const params = {};
-            const queryString = window.location.search;
-            const urlParams = new URLSearchParams(queryString);
-            params.lat = parseFloat(urlParams.get('lat')) || 27.2711300032348;  // Default latitude
-            params.lng = parseFloat(urlParams.get('lng')) || 31.2625760003178;  // Default longitude
-            params.name = urlParams.get('name') || "Default Location";
-            return params;
+        function initializeMap(lat, lng) {
+            var map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/satellite-v9',
+                center: [lng, lat],
+                zoom: 15
+            });
+
+            new mapboxgl.Marker()
+                .setLngLat([lng, lat])
+                .addTo(map);
         }
 
-        const params = getQueryParams();
+        // Get latitude and longitude from query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const lat = urlParams.get('lat');
+        const lng = urlParams.get('lng');
 
-        var map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v11',
-            center: [params.lng, params.lat], // starting position [lng, lat]
-            zoom: 15 // starting zoom
-        });
-
-        new mapboxgl.Marker()
-            .setLngLat([params.lng, params.lat])
-            .setPopup(new mapboxgl.Popup().setHTML(`<h1>${params.name}</h1>`))
-            .addTo(map);
+        // Initialize map with provided coordinates
+        if (lat && lng) {
+            initializeMap(parseFloat(lat), parseFloat(lng));
+        } else {
+            console.error("Latitude and longitude are required.");
+        }
     </script>
 </body>
 </html>
