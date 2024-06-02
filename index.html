@@ -20,29 +20,25 @@
             const params = {};
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
-            params.lat = parseFloat(urlParams.get('lat'));
-            params.lng = parseFloat(urlParams.get('lng'));
-            params.name = urlParams.get('name') || "Location";
+            params.lat = parseFloat(urlParams.get('lat')) || 27.2711300032348;  // Default latitude
+            params.lng = parseFloat(urlParams.get('lng')) || 31.2625760003178;  // Default longitude
+            params.name = urlParams.get('name') || "Default Location";
             return params;
         }
 
         const params = getQueryParams();
 
-        if (!isNaN(params.lat) && !isNaN(params.lng)) {
-            var map = new mapboxgl.Map({
-                container: 'map',
-                style: 'mapbox://styles/mapbox/streets-v11',
-                center: [params.lng, params.lat], // starting position [lng, lat]
-                zoom: 15 // starting zoom
-            });
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [params.lng, params.lat], // starting position [lng, lat]
+            zoom: 15 // starting zoom
+        });
 
-            new mapboxgl.Marker()
-                .setLngLat([params.lng, params.lat])
-                .setPopup(new mapboxgl.Popup().setHTML(`<h1>${params.name}</h1>`))
-                .addTo(map);
-        } else {
-            alert("Invalid latitude or longitude");
-        }
+        new mapboxgl.Marker()
+            .setLngLat([params.lng, params.lat])
+            .setPopup(new mapboxgl.Popup().setHTML(`<h1>${params.name}</h1>`))
+            .addTo(map);
     </script>
 </body>
 </html>
